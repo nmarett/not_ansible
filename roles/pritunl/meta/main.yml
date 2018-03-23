@@ -1,8 +1,8 @@
 galaxy_info:
   author: nigelmarett
-  description: Pritunl installation for RHEL.
+  description: Pritunl installation for RHEL/CentOS
   company:
-  license: "license MIT"
+  license: "license GPL"
   min_ansible_version: 1.8
   platforms:
     - name: RHEL
