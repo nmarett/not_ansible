@@ -1,0 +1,69 @@
+---
+- name: Add Pritunl repository.
+  yum_repository:
+    name: pritunl
+    description: Pritunl Repository
+    baseurl: https://repo.pritunl.com/stable/yum/centos/7/
+    gpgcheck: no
+    
+- name: Add MongoDB repository.
+  yum_repository:
+    name: mongodb
+    description: MongoDB Repository
+    baseurl: https://repo.mongodb.org/yum/redhat/7/mongodb-org/3.4/x86_64/
+    gpgkey: https://www.mongodb.org/static/pgp/server-3.4.asc
+    gpgcheck: yes
+
+- name: Add EPEL repo.
+  yum_repository:
+    name: epel
+    description: epel Repository
+    baseurl: http://download.fedoraproject.org/pub/epel/7/$basearch
+    gpgcheck: no
+
+- name: Install MongoDB.
+  yum:
+    name: mongodb-org
+    
+
+- name: Install Pritunl
+  yum:
+    name: pritunl
+    enablerepo: epel,pritunl
+
+- name: Copy pritunl config file.
+  template:
+    src: pritunl.conf.j2
+    dest: /etc/pritunl.conf
+  notify: restart pritunl
+   
+# 
+- name: Start mongodb and enable at boot
+  service: name=mongod state=started enabled=yes
+  when: ansible_connection != 'docker'
+
+# service
+- name: Ensure Pritunl is started and enabled to start at boot.
+  service: name=pritunl state=started enabled=yes
+  when: ansible_connection != 'docker'
+
+# enable Firewall ports for Pritunl and Openvpn
+- firewalld:
+    service: http
+    permanent: true
+    state: enabled
+
+- firewalld:
+    service: https
+    permanent: true
+    state: enabled
+
+- firewalld:
+    service: openvpn
+    permanent: true
+    state: enabled
+
+# clean up
+- name: Purge yum cache.
+  command: yum clean all
+  when: ansible_connection == 'docker'

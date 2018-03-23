@@ -1,0 +1,4 @@
+---
+#
+[sg-dedicated]
+ktp ansible_host=ktp.serverguru.co.uk ansible_user=root ansible_become=false

@@ -1,0 +1,3 @@
+- hosts: sg-dedicated
+  roles:
+     - { role: pritunl } 
