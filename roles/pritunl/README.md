@@ -29,7 +29,9 @@ Example Playbook
 License
 -------
 
-MIT
+GPL
 
 Author Information
 ------------------
+
+Nigel Marett <nigel@serverguru.co.uk>
